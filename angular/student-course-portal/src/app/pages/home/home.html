@@ -1,6 +1,6 @@
 <h1>{{ portalName }}</h1>
 
-<p>Explore available courses and manage your student profile.</p>
+<p>Courses Available: {{ courseCount }}</p>
 
 <button
   [disabled]="!isPortalActive"
@@ -27,3 +27,4 @@
   <p>Enrolled: 3</p>
   <p>GPA: 3.8</p>
 </div>
+<app-course-summary-widget></app-course-summary-widget>

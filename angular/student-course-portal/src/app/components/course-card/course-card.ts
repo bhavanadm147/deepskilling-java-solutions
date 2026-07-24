@@ -9,6 +9,8 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
+import { Course } from '../../models/course.model';
+import { EnrollmentService } from '../../services/enrollment';
 
 @Component({
   selector: 'app-course-card',
@@ -18,18 +20,16 @@ import { CreditLabelPipe } from '../../pipes/credit-label-pipe';
 })
 export class CourseCard implements OnChanges {
 
-  @Input() course!: {
-    id: number;
-    name: string;
-    code: string;
-    credits: number | null;
-    gradeStatus: string;
-    enrolled: boolean;
-  };
+  @Input() course!: Course;
 
-  @Output() enrollRequested = new EventEmitter<number>();
+  @Output()
+  enrollRequested = new EventEmitter<number>();
 
   isExpanded = false;
+
+  constructor(
+    public enrollmentService: EnrollmentService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['course']) {
@@ -43,22 +43,41 @@ export class CourseCard implements OnChanges {
     }
   }
 
+  toggleEnrollment(): void {
+
+    if (this.enrollmentService.isEnrolled(this.course.id)) {
+
+      this.enrollmentService.unenroll(this.course.id);
+
+    } else {
+
+      this.enrollmentService.enroll(this.course.id);
+
+      this.enrollRequested.emit(this.course.id);
+    }
+  }
+
   toggleDetails(): void {
     this.isExpanded = !this.isExpanded;
   }
 
-  // Using a getter keeps conditional class logic
-  // out of the HTML template and makes it cleaner.
   get cardClasses() {
     return {
-      'card--enrolled': this.course.enrolled,
-      'card--full': (this.course.credits ?? 0) >= 4,
-      'expanded': this.isExpanded
+      'card--enrolled':
+        this.enrollmentService.isEnrolled(this.course.id),
+
+      'card--full':
+        this.course.credits >= 4,
+
+      'expanded':
+        this.isExpanded
     };
   }
 
   get borderColor(): string {
+
     switch (this.course.gradeStatus) {
+
       case 'passed':
         return 'green';
 
