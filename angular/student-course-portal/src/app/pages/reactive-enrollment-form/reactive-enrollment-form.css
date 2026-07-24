@@ -1,0 +1,39 @@
+form {
+  max-width: 550px;
+  padding: 20px;
+}
+
+div {
+  margin-bottom: 10px;
+}
+
+label {
+  margin-right: 10px;
+}
+
+input,
+select {
+  padding: 8px;
+  margin: 5px;
+  border: 2px solid #ccc;
+}
+
+input.ng-invalid.ng-touched,
+select.ng-invalid.ng-touched {
+  border-color: red;
+}
+
+input.ng-valid.ng-touched,
+select.ng-valid.ng-touched {
+  border-color: green;
+}
+
+span {
+  display: block;
+  margin: 5px;
+}
+
+button {
+  padding: 8px 15px;
+  margin: 5px;
+}
